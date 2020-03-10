@@ -132,6 +132,79 @@ sub getCard {
 	return [];
 }
 
+=head2 searchCardBy
+
+Obtain the card information based on one field passed by argument.
+
+=cut
+sub searchCardBy {
+	my $self = shift;
+	my $boardId = shift;
+	my $fieldName = shift;
+	my $fieldValue = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+	die "Need the field name information\n" unless defined($fieldName);
+	die "Need the field value information\n" unless defined($fieldValue);
+
+	my $cards = $self->getCards($boardId);
+	foreach my $card (@$cards) {
+		if ($card->{$fieldName} eq $fieldValue) {
+			return $card;
+		}
+	}
+
+	return {};
+}
+
+=head2 searchCardByName
+
+Obtain the card information based on its name.
+
+=cut
+sub searchCardByName {
+	my $self = shift;
+	my $boardId = shift;
+	my $cardName = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+	die "Need the card name information\n" unless defined($cardName);
+
+	return $self->searchCardBy($boardId, 'name', $cardName);
+}
+
+=head2 searchCardByShortUrl
+
+Obtain the card information based on its short url.
+
+=cut
+sub searchCardByShortUrl {
+	my $self = shift;
+	my $boardId = shift;
+	my $cardUrl = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+	die "Need the card url information\n" unless defined($cardUrl);
+
+	return $self->searchCardBy($boardId, 'shortUrl', $cardUrl);
+}
+
+=head2 searchCardByUrl
+
+Obtain the card information based on its full url.
+
+=cut
+sub searchCardByUrl {
+	my $self = shift;
+	my $boardId = shift;
+	my $cardUrl = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+	die "Need the card url information\n" unless defined($cardUrl);
+
+	return $self->searchCardBy($boardId, 'url', $cardUrl);
+}
+
 =head2 moveCard
 
 Move the card to a new list.

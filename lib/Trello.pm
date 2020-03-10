@@ -230,6 +230,36 @@ sub moveCard {
 	return 1;
 }
 
+=head2 moveCard
+
+Move the card to a new list selected by name.
+
+=cut
+sub moveCardByName {
+	my $self = shift;
+	my $boardId = shift;
+	my $cardName = shift;
+	my $listName = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+	die "Need the card name information\n" unless defined($cardName);
+	die "Need the list name information\n" unless defined($listName);
+
+	my $list = $self->searchList($boardId, $listName);
+	my $card = $self->searchCard($boardId, $cardName);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{idList} = $list->{id};
+
+	my $response =  $self->put("$api/cards/"+$card->{id}, $arguments);
+	if ($response->code != 200) {
+		return 0;
+	}
+
+	return 1;
+}
+
 =head2 authArgs
 
 Prepare and return the authentication list to send on each request.

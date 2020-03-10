@@ -48,12 +48,14 @@ Obtain the board lists (or columns).
 =cut
 sub getLists {
 	my $self = shift;
-	my $board = shift;
+	my $boardId = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 
-	my $response =  $self->get("$api/boards/$board/lists", $arguments);
+	my $response =  $self->get("$api/boards/$boardId/lists", $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
@@ -70,15 +72,15 @@ Search a list or column by its name.
 =cut
 sub searchList {
 	my $self = shift;
-	my $board = shift;
-	my $name = shift;
+	my $boardId = shift;
+	my $listName = shift;
 
-	die "Need the board id\n" unless defined($board);
-	die "Need the list name\n" unless defined($name);
+	die "Need the board id\n" unless defined($boardId);
+	die "Need the list name\n" unless defined($listName);
 
-	my $lists = $self->getLists($board);
+	my $lists = $self->getLists($boardId);
 	foreach my $list (@$lists) {
-		if ($list->{name} eq $name) {
+		if ($list->{name} eq $listName) {
 			return $list;
 		}
 	}
@@ -93,12 +95,14 @@ Obtain the board cards.
 =cut
 sub getCards {
 	my $self = shift;
-	my $board = shift;
+	my $boardId = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
 
 	my $arguments = $self->authArgs();
 	my $api = uri_escape($self->version);
 
-	my $response =  $self->get("$api/boards/$board/cards", $arguments);
+	my $response =  $self->get("$api/boards/$boardId/cards", $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
@@ -115,8 +119,10 @@ sub getCard {
 	my $self = shift;
 	my $cardId = shift;
 
-	my $arguments = $self->authArgs();
+	die "Need the card id information\n" unless defined($cardId);
+
 	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
 
 	my $response =  $self->get("$api/cards/$cardId", $arguments);
 	if ($response->code == 200) {
@@ -135,6 +141,9 @@ sub moveCard {
 	my $self = shift;
 	my $cardId = shift;
 	my $listId = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+	die "Need the list id information\n" unless defined($listId);
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();

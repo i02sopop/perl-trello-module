@@ -219,7 +219,7 @@ sub moveCard {
 	return 1;
 }
 
-=head2 moveCard
+=head2 moveCardByName
 
 Move the card to a new list selected by name.
 

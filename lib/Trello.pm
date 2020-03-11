@@ -49,14 +49,14 @@ Obtain the board lists (or columns).
 =cut
 sub getLists {
 	my $self = shift;
-	my $boardId = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
+	die "Board id undefined\n" unless defined($self->board);
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 
-	my $response =  $self->get("$api/boards/$boardId/lists", $arguments);
+	my $response =  $self->get("$api/boards/" + $self->board + "/lists",
+							   $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
@@ -73,13 +73,11 @@ Search a list or column by its name.
 =cut
 sub searchList {
 	my $self = shift;
-	my $boardId = shift;
 	my $listName = shift;
 
-	die "Need the board id\n" unless defined($boardId);
 	die "Need the list name\n" unless defined($listName);
 
-	my $lists = $self->getLists($boardId);
+	my $lists = $self->getLists();
 	foreach my $list (@$lists) {
 		if ($list->{name} eq $listName) {
 			return $list;
@@ -96,14 +94,13 @@ Obtain the board cards.
 =cut
 sub getCards {
 	my $self = shift;
-	my $boardId = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
+	die "Board id undefined\n" unless defined($self->board);
 
 	my $arguments = $self->authArgs();
 	my $api = uri_escape($self->version);
 
-	my $response =  $self->get("$api/boards/$boardId/cards", $arguments);
+	my $response =  $self->get("$api/boards/" + $self->board + "/cards", $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
@@ -140,15 +137,13 @@ Obtain the card information based on one field passed by argument.
 =cut
 sub searchCardBy {
 	my $self = shift;
-	my $boardId = shift;
 	my $fieldName = shift;
 	my $fieldValue = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
 	die "Need the field name information\n" unless defined($fieldName);
 	die "Need the field value information\n" unless defined($fieldValue);
 
-	my $cards = $self->getCards($boardId);
+	my $cards = $self->getCards();
 	foreach my $card (@$cards) {
 		if ($card->{$fieldName} eq $fieldValue) {
 			return $card;
@@ -165,13 +160,11 @@ Obtain the card information based on its name.
 =cut
 sub searchCardByName {
 	my $self = shift;
-	my $boardId = shift;
 	my $cardName = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
 	die "Need the card name information\n" unless defined($cardName);
 
-	return $self->searchCardBy($boardId, 'name', $cardName);
+	return $self->searchCardBy('name', $cardName);
 }
 
 =head2 searchCardByShortUrl
@@ -181,13 +174,11 @@ Obtain the card information based on its short url.
 =cut
 sub searchCardByShortUrl {
 	my $self = shift;
-	my $boardId = shift;
 	my $cardUrl = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
 	die "Need the card url information\n" unless defined($cardUrl);
 
-	return $self->searchCardBy($boardId, 'shortUrl', $cardUrl);
+	return $self->searchCardBy('shortUrl', $cardUrl);
 }
 
 =head2 searchCardByUrl
@@ -197,13 +188,11 @@ Obtain the card information based on its full url.
 =cut
 sub searchCardByUrl {
 	my $self = shift;
-	my $boardId = shift;
 	my $cardUrl = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
 	die "Need the card url information\n" unless defined($cardUrl);
 
-	return $self->searchCardBy($boardId, 'url', $cardUrl);
+	return $self->searchCardBy('url', $cardUrl);
 }
 
 =head2 moveCard
@@ -238,16 +227,14 @@ Move the card to a new list selected by name.
 =cut
 sub moveCardByName {
 	my $self = shift;
-	my $boardId = shift;
 	my $cardName = shift;
 	my $listName = shift;
 
-	die "Need the board id information\n" unless defined($boardId);
 	die "Need the card name information\n" unless defined($cardName);
 	die "Need the list name information\n" unless defined($listName);
 
-	my $list = $self->searchList($boardId, $listName);
-	my $card = $self->searchCard($boardId, $cardName);
+	my $list = $self->searchList($listName);
+	my $card = $self->searchCard($cardName);
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();

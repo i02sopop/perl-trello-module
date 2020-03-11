@@ -9,6 +9,7 @@ with 'Role::REST::Client';
 
 use JSON;
 use URI::Escape;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -252,12 +253,64 @@ sub moveCardByName {
 	my $arguments = $self->authArgs();
 	$arguments->{idList} = $list->{id};
 
-	my $response =  $self->put("$api/cards/"+$card->{id}, $arguments);
+	my $response = $self->put("$api/cards/"+$card->{id}, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
 
 	return 1;
+}
+
+=head2 getBoard
+
+Get all the information related to a board by id.
+
+=cut
+sub getBoard {
+	my $self = shift;
+	my $boardId = shift;
+
+	die "Need the board id information\n" unless defined($boardId);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+
+	my $response = $self->get("$api/boards/$boardId", $arguments);
+	if ($response->code != 200) {
+		return {};
+	}
+
+	return $response->data;
+}
+
+=head2 searchBoard
+
+Search for a board based on its name. It uses the trello search, so it works
+with partial names. If it finds more than one board it returns the first board
+found.
+
+=cut
+sub searchBoard {
+	my $self = shift;
+	my $boardName = shift;
+
+	die "Need the board name information\n" unless defined($boardName);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{query} = $boardName;
+	$arguments->{modelTypes} = "boards";
+
+	my $response = $self->get("$api/search", $arguments);
+	if ($response->code != 200 || @{$response->data->{boards}} == 0) {
+		return {};
+	}
+
+	if (@{$response->data->{boards}} > 1) {
+		print "We have found more than one board, returning the first one\n";
+	}
+
+	return $self->getBoard($response->data->{boards}->[0]->{id});
 }
 
 =head2 authArgs

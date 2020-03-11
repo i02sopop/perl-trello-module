@@ -34,10 +34,11 @@ A common way to use it is:
 
     my $trello = Trello->new(
 	    key   => 'key',
-	    token => 'token';
+	    token => 'token',
+        board => 'board_id');
 
-    my $lists = $trello->get( "boards/$id/lists" );
-    $trello->post( "cards", {name => 'New card', idList => $id} );
+    # Get card information.
+    my $card = $trello->searchCardByShortUrl('https://trello.com/c/Sufdpech');
     ...
 
 =head1 SUBROUTINES/METHODS

@@ -299,6 +299,58 @@ sub searchBoard {
 	return $self->getBoard($response->data->{boards}->[0]->{id});
 }
 
+=head2 getMember
+
+Get all the information related to a member by id.
+
+=cut
+sub getMember {
+	my $self = shift;
+	my $memberId = shift;
+
+	die "Need the member id information\n" unless defined($memberId);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+
+	my $response = $self->get("$api/members/$memberId", $arguments);
+	if ($response->code != 200) {
+		return {};
+	}
+
+	return $response->data;
+}
+
+=head2 searchMember
+
+Search for a member based on its name. It uses the trello search, so it works
+with partial names. If it finds more than one board it returns the first member
+found.
+
+=cut
+sub searchMember {
+	my $self = shift;
+	my $memberName = shift;
+
+	die "Need the member name\n" unless defined($memberName);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{query} = $memberName;
+	$arguments->{modelTypes} = "members";
+
+	my $response = $self->get("$api/search", $arguments);
+	if ($response->code != 200 || @{$response->data->{members}} == 0) {
+		return {};
+	}
+
+	if (@{$response->data->{members}} > 1) {
+		print "We have found more than one member, returning the first one\n";
+	}
+
+	return $self->getMember($response->data->{members}->[0]->{id});
+}
+
 =head2 authArgs
 
 Prepare and return the authentication list to send on each request.

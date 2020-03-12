@@ -195,7 +195,7 @@ sub setCardCustomField {
 	my $arguments = $self->authArgs();
 	$arguments->{value} = $fieldValue;
 
-	my $response = $self->put("$api/cards/$cardId/customFields/$fieldId",
+	my $response = $self->put("$api/cards/$cardId/customFields/$fieldId/item",
 							  $arguments);
 	if ($response->code == 200) {
 		return 1;

@@ -54,7 +54,7 @@ sub getLists {
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 
-	my $response =  $self->get("$api/boards/" + $self->board + "/lists",
+	my $response =  $self->get("$api/boards/" . $self->board . "/lists",
 							   $arguments);
 	if ($response->code == 200) {
 		return $response->data;
@@ -99,7 +99,8 @@ sub getCards {
 	my $arguments = $self->authArgs();
 	my $api = uri_escape($self->version);
 
-	my $response =  $self->get("$api/boards/" + $self->board + "/cards", $arguments);
+	my $response =  $self->get("$api/boards/" . $self->board . "/cards",
+							   $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
@@ -239,7 +240,7 @@ sub moveCardByName {
 	my $arguments = $self->authArgs();
 	$arguments->{idList} = $list->{id};
 
-	my $response = $self->put("$api/cards/" + $card->{id}, $arguments);
+	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -262,7 +263,7 @@ sub archiveCard {
 	my $arguments = $self->authArgs();
 	$arguments->{closed} = 1;
 
-	my $response = $self->put("$api/cards/" + $cardId, $arguments);
+	my $response = $self->put("$api/cards/" . $cardId, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -287,9 +288,9 @@ sub appendCardDescription {
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
-	$arguments->{desc} = $card->{desc} + $description;
+	$arguments->{desc} = $card->{desc} . $description;
 
-	my $response = $self->put("$api/cards/"+$card->{id}, $arguments);
+	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -314,7 +315,7 @@ sub replaceCardDescription {
 	my $arguments = $self->authArgs();
 	$arguments->{desc} = $description;
 
-	my $response = $self->put("$api/cards/" + $cardId, $arguments);
+	my $response = $self->put("$api/cards/" . $cardId, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -344,7 +345,7 @@ sub addCardMember {
 	my $arguments = $self->authArgs();
 	$arguments->{idMembers} = join(',', $card->{idMembers}, $member->{id});
 
-	my $response = $self->put("$api/cards/"+$card->{id}, $arguments);
+	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -375,7 +376,7 @@ sub removeCardMember {
 	my $arguments = $self->authArgs();
 	$arguments->{idMembers} = join(',', @members);
 
-	my $response = $self->put("$api/cards/"+$card->{id}, $arguments);
+	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
 		return 0;
 	}
@@ -529,6 +530,18 @@ once, then code it into the script.
 =cut
 
 has 'token' => (
+	is  => 'rw',
+	isa => 'Str',
+);
+
+
+=head2 board
+
+This attribute holds the L<Trello|https://www.trello.com> board id.
+
+=cut
+
+has 'board' => (
 	is  => 'rw',
 	isa => 'Str',
 );

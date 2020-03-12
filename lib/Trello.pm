@@ -193,7 +193,7 @@ sub setCardCustomField {
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
-	$arguments->{value} = "$fieldValue";
+	$arguments->{value} = "{\"text\": \"$fieldValue\"}";
 
 	my $response = $self->put("$api/cards/$cardId/customField/$fieldId/item",
 							  $arguments);

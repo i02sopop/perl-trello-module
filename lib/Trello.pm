@@ -8,7 +8,6 @@ use Moose;
 with 'Role::REST::Client';
 
 use URI::Escape;
-use Data::Dumper;
 
 =head1 NAME
 
@@ -201,8 +200,6 @@ sub setCardCustomField {
 	if ($response->code == 200) {
 		return 1;
 	}
-
-	print Dumper($response->data);
 
 	return 0;
 }

@@ -171,9 +171,11 @@ sub getCardCustomField {
 			return $field;
 		}
 	}
+
+	return {};
 }
 
-=head2 setCardCustomFieldByName
+=head2 setCardCustomField
 
 Set a card custom field filtered by its id.
 

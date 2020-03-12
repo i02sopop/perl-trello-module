@@ -201,6 +201,8 @@ sub setCardCustomField {
 		return 1;
 	}
 
+	print Dumper($response->data);
+
 	return 0;
 }
 

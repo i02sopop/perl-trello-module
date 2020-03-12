@@ -122,12 +122,114 @@ sub getCard {
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 
-	my $response =  $self->get("$api/cards/$cardId", $arguments);
+	my $response = $self->get("$api/cards/$cardId", $arguments);
 	if ($response->code == 200) {
 		return $response->data;
 	}
 
 	return [];
+}
+
+=head2 getCardCustomFields
+
+Get a card custom fields.
+
+=cut
+sub getCardCustomFields {
+	my $self = shift;
+	my $cardId = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+
+	my $response = $self->get("$api/cards/$cardId/customFields", $arguments);
+	if ($response->code == 200) {
+		return $response->data;
+	}
+
+	return [];
+}
+
+=head2 getCardCustomField
+
+Get a card custom field filtered by its name.
+
+=cut
+sub getCardCustomField {
+	my $self = shift;
+	my $cardId = shift;
+	my $fieldName = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+	die "Need the field name information\n" unless defined($fieldName);
+
+	my $fields = $self->getCardCustomFields($cardId);
+	foreach my $field (@$fields) {
+		if ($field->{name} eq $fieldName) {
+			return $field;
+		}
+	}
+}
+
+=head2 setCardCustomFieldByName
+
+Set a card custom field filtered by its id.
+
+=cut
+sub setCardCustomField {
+	my $self = shift;
+	my $cardId = shift;
+	my $fieldId = shift;
+	my $fieldValue = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+	die "Need the field id information\n" unless defined($fieldId);
+	die "Need the field value information\n" unless defined($fieldValue);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{value} = $fieldValue;
+
+	my $response = $self->put("$api/cards/$cardId/customFields/$fieldId",
+							  $arguments);
+	if ($response->code == 200) {
+		return 1;
+	}
+
+	return 0;
+}
+
+=head2 setCardCustomFieldByName
+
+Set a card custom field filtered by its name.
+
+=cut
+sub setCardCustomFieldByName {
+	my $self = shift;
+	my $cardId = shift;
+	my $fieldName = shift;
+	my $fieldValue = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+	die "Need the field name information\n" unless defined($fieldName);
+	die "Need the field value information\n" unless defined($fieldValue);
+
+	my $field = $self->getCardCustomField($cardId, $fieldName);
+	die "Field $fieldName not found" unless defined($field->{id});
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{value} = $fieldValue;
+
+	my $response = $self->put("$api/cards/$cardId/customFields/" . $field->{id},
+							  $arguments);
+	if ($response->code == 200) {
+		return 1;
+	}
+
+	return 0;
 }
 
 =head2 searchCardBy

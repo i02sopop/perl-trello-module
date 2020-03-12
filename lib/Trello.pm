@@ -222,19 +222,7 @@ sub setCardCustomFieldByName {
 	my $field = $self->getCardCustomField($cardId, $fieldName);
 	die "Field $fieldName not found" unless defined($field->{id});
 
-	my $api = uri_escape($self->version);
-	my $arguments = $self->authArgs();
-	$arguments->{value} = $fieldValue;
-
-	my $response = $self->put("$api/cards/$cardId/customFields/" . $field->{id},
-							  $arguments);
-	if ($response->code == 200) {
-		return 1;
-	}
-
-	print Dumper($response->data);
-
-	return 0;
+	return $self->setCardCustomField($cardId, $field->{id}, $fieldValue);
 }
 
 =head2 searchCardBy

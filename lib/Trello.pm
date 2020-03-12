@@ -418,12 +418,39 @@ sub replaceCardDescription {
 	return 1;
 }
 
-=head2 addCardMember
+=head2 addCardMemberById
 
-Add a member to a card.
+Add a member to a card by its id.
 
 =cut
-sub addCardMember {
+sub addCardMemberById {
+	my $self = shift;
+	my $cardId = shift;
+	my $memberId = shift;
+
+	die "Need the card id information\n" unless defined($cardId);
+	die "Need the member id to add\n" unless defined($memberId);
+
+	my $card = $self->searchCardBy('id', $cardId);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{idMembers} = join(',', $card->{idMembers}, $memberId);
+
+	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
+	if ($response->code != 200) {
+		return 0;
+	}
+
+	return 1;
+}
+
+=head2 addCardMemberByName
+
+Add a member to a card by its name.
+
+=cut
+sub addCardMemberByName {
 	my $self = shift;
 	my $cardId = shift;
 	my $memberName = shift;
@@ -434,18 +461,7 @@ sub addCardMember {
 	my $member = $self->searchMember($memberName);
 	die "Member $memberName not found" unless defined($member->{id});
 
-	my $card = $self->searchCardBy('id', $cardId);
-
-	my $api = uri_escape($self->version);
-	my $arguments = $self->authArgs();
-	$arguments->{idMembers} = join(',', $card->{idMembers}, $member->{id});
-
-	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
-	if ($response->code != 200) {
-		return 0;
-	}
-
-	return 1;
+	return $self->addCardMemberById($cardId, $member->{id});
 }
 
 =head2 removeCardMember

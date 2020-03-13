@@ -433,6 +433,11 @@ sub addCardMemberById {
 	die "Need the member id to add\n" unless defined($memberId);
 
 	my $card = $self->searchCardBy('id', $cardId);
+	unless (defined $card->{id}) {
+		print "Card $cardId not found.\n";
+		return 0;
+	}
+
 	my @members = [$memberId];
 	if (defined($card->{idMembers})) {
 		@members = push(@members, @{$card->{idMembers}});

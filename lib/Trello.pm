@@ -8,6 +8,7 @@ use Moose;
 with 'Role::REST::Client';
 
 use URI::Escape;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -588,6 +589,7 @@ sub searchMember {
 	$arguments->{modelTypes} = "members";
 
 	my $response = $self->get("$api/search", $arguments);
+	print Dumper($response->data);
 	if ($response->code != 200 || @{$response->data->{members}} == 0) {
 		return {};
 	}

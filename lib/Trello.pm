@@ -588,7 +588,7 @@ sub searchMember {
 	$arguments->{query} = $memberName;
 	$arguments->{modelTypes} = "members";
 
-	my $response = $self->get("$api/search", $arguments);
+	my $response = $self->get("$api/search/members/", $arguments);
 	print Dumper($response->data);
 	if ($response->code != 200 || @{$response->data->{members}} == 0) {
 		return {};

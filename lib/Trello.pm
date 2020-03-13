@@ -590,11 +590,11 @@ sub searchMember {
 
 	my $response = $self->get("$api/search/members/", $arguments);
 	print Dumper($response->data);
-	if ($response->code != 200 || @{$response->data->{members}} == 0) {
+	if ($response->code != 200 || @{$response->data} == 0) {
 		return {};
 	}
 
-	if (@{$response->data->{members}} > 1) {
+	if (@{$response->data} > 1) {
 		print "We have found more than one member, returning the first one\n";
 	}
 

@@ -433,12 +433,17 @@ sub addCardMemberById {
 	die "Need the member id to add\n" unless defined($memberId);
 
 	my $card = $self->searchCardBy('id', $cardId);
+	my @members = [$memberId];
+	if (defined($card->{idMembers})) {
+		@members = jpin(',', @members, @{$card->{idMembers}});
+	}
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
-	$arguments->{idMembers} = join(',', $card->{idMembers}, $memberId);
+	$arguments->{idMembers} = @members;
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
+	print Dumper($response);
 	print Dumper($response->data);
 	if ($response->code != 200) {
 		return 0;

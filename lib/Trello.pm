@@ -439,6 +439,7 @@ sub addCardMemberById {
 	$arguments->{idMembers} = join(',', $card->{idMembers}, $memberId);
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
+	print Dumper($response->data);
 	if ($response->code != 200) {
 		return 0;
 	}

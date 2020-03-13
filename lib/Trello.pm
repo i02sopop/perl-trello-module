@@ -589,7 +589,6 @@ sub searchMember {
 	$arguments->{modelTypes} = "members";
 
 	my $response = $self->get("$api/search/members/", $arguments);
-	print Dumper($response->data);
 	if ($response->code != 200 || @{$response->data} == 0) {
 		return {};
 	}
@@ -598,7 +597,7 @@ sub searchMember {
 		print "We have found more than one member, returning the first one\n";
 	}
 
-	return $self->getMember($response->data->{members}->[0]->{id});
+	return $self->getMember($response->data->[0]->{id});
 }
 
 =head2 authArgs

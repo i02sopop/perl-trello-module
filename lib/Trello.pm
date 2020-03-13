@@ -441,7 +441,7 @@ sub addCardMemberById {
 	my @members = ($memberId);
 	if (defined($card->{idMembers})) {
 		print Dumper($card->{idMembers});
-		@members = push(@members, @{$card->{idMembers}});
+		push(@members, @{$card->{idMembers}});
 	}
 
 	my $api = uri_escape($self->version);
@@ -451,10 +451,9 @@ sub addCardMemberById {
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
+		print Dumper($response->data);
 		return 0;
 	}
-
-	print Dumper($response->data);
 
 	return 1;
 }

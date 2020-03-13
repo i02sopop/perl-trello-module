@@ -435,7 +435,7 @@ sub addCardMemberById {
 	my $card = $self->searchCardBy('id', $cardId);
 	my @members = [$memberId];
 	if (defined($card->{idMembers})) {
-		@members = jpin(',', @members, @{$card->{idMembers}});
+		@members = join(',', @members, @{$card->{idMembers}});
 	}
 
 	my $api = uri_escape($self->version);

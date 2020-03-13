@@ -435,12 +435,12 @@ sub addCardMemberById {
 	my $card = $self->searchCardBy('id', $cardId);
 	my @members = [$memberId];
 	if (defined($card->{idMembers})) {
-		@members = join(',', @members, @{$card->{idMembers}});
+		@members = push(@members, @{$card->{idMembers}});
 	}
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
-	$arguments->{idMembers} = @members;
+	$arguments->{idMembers} = join(',', @members);
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	print Dumper($response);

@@ -438,21 +438,23 @@ sub addCardMemberById {
 		return 0;
 	}
 
-	my @members = [$memberId];
+	my @members = ($memberId);
 	if (defined($card->{idMembers})) {
+		print Dumper($card->{idMembers});
 		@members = push(@members, @{$card->{idMembers}});
 	}
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 	$arguments->{idMembers} = join(',', @members);
+	print $arguments->{idMembers} . "\n";
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
-	print Dumper($response);
-	print Dumper($response->data);
 	if ($response->code != 200) {
 		return 0;
 	}
+
+	print Dumper($response->data);
 
 	return 1;
 }

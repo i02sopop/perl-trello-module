@@ -8,7 +8,6 @@ use Moose;
 with 'Role::REST::Client';
 
 use URI::Escape;
-use Data::Dumper;
 
 =head1 NAME
 
@@ -440,18 +439,15 @@ sub addCardMemberById {
 
 	my @members = ($memberId);
 	if (defined($card->{idMembers})) {
-		print Dumper($card->{idMembers});
 		push(@members, @{$card->{idMembers}});
 	}
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 	$arguments->{idMembers} = join(',', @members);
-	print $arguments->{idMembers} . "\n";
 
 	my $response = $self->put("$api/cards/" . $card->{id}, $arguments);
 	if ($response->code != 200) {
-		print Dumper($response->data);
 		return 0;
 	}
 

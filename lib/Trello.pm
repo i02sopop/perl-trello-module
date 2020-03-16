@@ -107,7 +107,7 @@ sub createCard {
 	$arguments->{desc} = $cardDescription;
 	$arguments->{pos} = 'top';
 	$arguments->{idList} = $idList;
-	# $argument->{idLabels} = '';
+	$arguments->{idLabels} = '';
 
 	my $response =  $self->post("$api/cards", $arguments);
 	if ($response->code == 200) {
@@ -585,6 +585,37 @@ sub searchBoard {
 	}
 
 	return $self->getBoard($response->data->{boards}->[0]->{id});
+}
+
+=head2 searchLabel
+
+Search by name for a label defined in the board.
+
+=cut
+sub searchLabel {
+	my $self = shift;
+	my $labelName = shift;
+
+	die "Need the label name information\n" unless defined($labelName);
+	die "Board id undefined\n" unless defined($self->board);
+
+	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
+	$arguments->{query} = $labelName;
+
+	my $response = $self->get("$api/boards/" . $self->board . "/labels",
+							  $arguments);
+	if ($response->code != 200) {
+		return {};
+	}
+
+	foreach my $label (@{response->data}) {
+		if ($label->name eq $labelName) {
+			return $label;
+		}
+	}
+
+	return {};
 }
 
 =head2 getMember

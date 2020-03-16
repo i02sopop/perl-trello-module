@@ -114,6 +114,9 @@ sub createCard {
 		return $response->data;
 	}
 
+	print "Response code: " . $response->code . "\n";
+	print Dumper($response->data);
+
 	return {};
 }
 

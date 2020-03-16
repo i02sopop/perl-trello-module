@@ -102,8 +102,8 @@ sub createCard {
 
 	my $arguments = $self->authArgs();
 	$arguments->{name} = $title;
-	$argument->{pos} = 'top';
-	$argument->{idList} = idList;
+	$arguments->{pos} = 'top';
+	$arguments->{idList} = idList;
 	# $argument->{idLabels} = '';
 
 	my $response =  $self->post("$api/cards", $arguments);

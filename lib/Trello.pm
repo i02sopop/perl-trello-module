@@ -621,7 +621,7 @@ sub searchLabel {
 	}
 
 	foreach my $label (@{$response->data}) {
-		if ($label->name eq $labelName) {
+		if ($label->{name} eq $labelName) {
 			return $label;
 		}
 	}

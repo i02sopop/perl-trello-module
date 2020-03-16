@@ -96,6 +96,7 @@ sub createCard {
 	my $idList = shift;
 	my $cardTitle = shift;
 	my $cardDescription = shift;
+	my @labels = @_;
 
 	die "Board id undefined\n" unless defined($self->board);
 	die "The card title is needed to create it\n" unless defined($cardTitle);
@@ -107,7 +108,17 @@ sub createCard {
 	$arguments->{desc} = $cardDescription;
 	$arguments->{pos} = 'top';
 	$arguments->{idList} = $idList;
-	$arguments->{idLabels} = '';
+
+	# Add the labels to the card.
+	if (@labels > 0) {
+		my @labelIds = ();
+		foreach my $labelName (@labels) {
+			my $label = $self->searchLabel($labelName);
+			push(@labelIds, $label->{id});
+		}
+
+		$arguments->{idLabels} = join(',', @labelIds);
+	}
 
 	my $response =  $self->post("$api/cards", $arguments);
 	if ($response->code == 200) {

@@ -8,6 +8,7 @@ use Moose;
 with 'Role::REST::Client';
 
 use URI::Escape;
+use Data::Dumper;
 
 =head1 NAME
 

@@ -8,7 +8,6 @@ use Moose;
 with 'Role::REST::Client';
 
 use URI::Escape;
-use Data::Dumper;
 
 =head1 NAME
 
@@ -114,10 +113,6 @@ sub createCard {
 	if ($response->code == 200) {
 		return $response->data;
 	}
-
-	print "Response code: " . $response->code . "\n";
-	print Dumper($response->data);
-	print "idList: $idList\n";
 
 	return {};
 }

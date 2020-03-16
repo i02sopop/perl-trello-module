@@ -86,6 +86,34 @@ sub searchList {
 	return {};
 }
 
+=head2 createCard
+
+Create a new card in trello.
+
+=cut
+sub createCard {
+	my $self = shift;
+	my $title = shift;
+	my $idList = shift;
+
+	die "Board id undefined\n" unless defined($self->board);
+	die "The card title is needed to create it\n" unless defined($title);
+	die "The list id is needed to create the card\n" unless defined($idList);
+
+	my $arguments = $self->authArgs();
+	$arguments->{name} = $title;
+	$argument->{pos} = 'top';
+	$argument->{idList} = idList;
+	# $argument->{idLabels} = '';
+
+	my $response =  $self->post("$api/cards", $arguments);
+	if ($response->code == 200) {
+		return $response->data;
+	}
+
+	return {};
+}
+
 =head2 getCards
 
 Obtain the board cards.

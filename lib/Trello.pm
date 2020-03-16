@@ -100,6 +100,7 @@ sub createCard {
 	die "The card title is needed to create it\n" unless defined($title);
 	die "The list id is needed to create the card\n" unless defined($idList);
 
+	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
 	$arguments->{name} = $title;
 	$arguments->{pos} = 'top';
@@ -124,8 +125,8 @@ sub getCards {
 
 	die "Board id undefined\n" unless defined($self->board);
 
-	my $arguments = $self->authArgs();
 	my $api = uri_escape($self->version);
+	my $arguments = $self->authArgs();
 
 	my $response =  $self->get("$api/boards/" . $self->board . "/cards",
 							   $arguments);

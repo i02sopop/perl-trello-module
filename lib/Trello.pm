@@ -93,16 +93,18 @@ Create a new card in trello.
 =cut
 sub createCard {
 	my $self = shift;
-	my $title = shift;
 	my $idList = shift;
+	my $cardTitle = shift;
+	my $cardDescription = shift;
 
 	die "Board id undefined\n" unless defined($self->board);
-	die "The card title is needed to create it\n" unless defined($title);
+	die "The card title is needed to create it\n" unless defined($cardTitle);
 	die "The list id is needed to create the card\n" unless defined($idList);
 
 	my $api = uri_escape($self->version);
 	my $arguments = $self->authArgs();
-	$arguments->{name} = $title;
+	$arguments->{name} = $cardTitle;
+	$arguments->{desc} = $cardDescription;
 	$arguments->{pos} = 'top';
 	$arguments->{idList} = $idList;
 	# $argument->{idLabels} = '';
